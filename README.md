@@ -58,8 +58,17 @@ The main requirements are:
 
 In the root directory, run
 ```bash
+pip install -r requirements.txt
 pip install -e .
 ```
+
+### Quick start (NYT, one-click)
+```bash
+export HF_TOKEN=your_hf_token   # 公共资源可不设
+pip install -r requirements.txt
+bash scripts/run_nyt.sh          # 自动下载 NYT 数据、bert-base-cased，并启动训练
+```
+默认配置：`exp_name=nyt`，`match_pattern=whole_text`，数据路径 `data4bert/nyt`，模型路径 `pretrained_models/bert-base-cased`，日志使用本地 default logger。
 ### Data
 #### download data
 Get and preprocess NYT* and WebNLG* following [CasRel](https://github.com/weizhepei/CasRel/tree/master/data) (note: named NYT and WebNLG by CasRel).

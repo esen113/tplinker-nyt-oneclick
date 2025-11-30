@@ -1,0 +1,7 @@
+torch==1.6.0
+transformers==3.0.2
+glove-python-binary==0.2.0
+tqdm==4.66.5
+pyyaml==6.0.1
+wandb==0.17.9
+huggingface_hub==0.34.4
