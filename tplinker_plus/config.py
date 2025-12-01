@@ -1,5 +1,8 @@
 import string
 import random
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 common = {
     "exp_name": "duie2", # ace05_lu
@@ -73,16 +76,16 @@ eval_config = {
 }
 
 bert_config = {
-    "data_home": "../data4bert",
-    "bert_path": "../../pretrained_models/chinese-bert-wwm-ext-hit", # bert-base-cased， chinese-bert-wwm-ext-hit
+    "data_home": str(PROJECT_ROOT / "data4bert"),
+    "bert_path": str(PROJECT_ROOT / "pretrained_models" / "chinese-bert-wwm-ext-hit"), # bert-base-cased， chinese-bert-wwm-ext-hit
     "hyper_parameters": {
         "lr": 5e-5,
     },
 }
 bilstm_config = {
-    "data_home": "../data4bilstm",
+    "data_home": str(PROJECT_ROOT / "data4bilstm"),
     "token2idx": "token2idx.json",
-    "pretrained_word_embedding_path": "../../pretrained_emb/glove_300_nyt.emb",
+    "pretrained_word_embedding_path": str(PROJECT_ROOT / "pretrained_emb" / "glove_300_nyt.emb"),
     "hyper_parameters": {
          "lr": 1e-3,
          "enc_hidden_size": 300,

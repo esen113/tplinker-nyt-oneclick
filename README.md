@@ -105,6 +105,16 @@ If you want to run on other datasets, transform them into the normal format for 
 }]
 ```
 
+##### MDIEC shortcut
+
+We added a helper script for the MDIEC corpus that chains the whole pipeline (download → convert → build):
+
+```
+python scripts/prepare_mdiec.py
+```
+
+It defaults to `exp_name=mdiec`, writes the intermediate JSON files to `preprocess/ori_data/mdiec`, and produces processed inputs under `data4bert/mdiec`. Use `--skip-download` to reuse an existing archive or `--valid-ratio/--test-ratio` to adjust the dataset split.
+
 ### Pretrained Model and Word Embeddings
 Download [BERT-BASE-CASED](https://huggingface.co/bert-base-cased) and put it under `../pretrained_models`. Pretrain word embeddings by `preprocess/Pretrain_Word_Embedding.ipynb` and put models under `../pretrained_emb`.
 
@@ -113,7 +123,7 @@ If you are bother to train word embeddings by yourself, use [our's](https://driv
 ### Train
 Set configuration in `tplinker/config.py` as follows:
 ```python
-common["exp_name"] = nyt_star # webnlg_star, nyt, webnlg
+common["exp_name"] = mdiec # e.g. webnlg_star, nyt, webnlg
 common["device_num"] = 0 # 1, 2, 3 ...
 common["encoder"] = "BERT" # BiLSTM
 train_config["hyper_parameters"]["batch_size"] = 24 # 6 for webnlg and webnlg_star
