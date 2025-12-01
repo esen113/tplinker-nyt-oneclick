@@ -5,15 +5,17 @@ set -euo pipefail
 # Requires: python with packages from requirements.txt and (optionally) HF_TOKEN env for private downloads.
 
 ROOT_DIR="$(cd -- "$(dirname "$0")/.." && pwd)"
+export ROOT_DIR
 export HF_HOME="${HF_HOME:-"$ROOT_DIR/.cache/huggingface"}"
 mkdir -p "$HF_HOME"
 
 python - <<'PY'
 import os
 from pathlib import Path
+import shutil
 from huggingface_hub import snapshot_download
 
-root = Path(__file__).resolve().parents[1]
+root = Path(os.environ["ROOT_DIR"])
 token = os.environ.get("HF_TOKEN")
 
 def ensure_snapshot(repo_id, repo_type, target_dir, allow_patterns=None):
@@ -37,6 +39,17 @@ ensure_snapshot(
     repo_type="dataset",
     target_dir=root / "data4bert" / "nyt",
 )
+
+nyt_target = root / "data4bert" / "nyt"
+nested_data = nyt_target / "data" / "nyt"
+if nested_data.exists():
+    for item in nested_data.iterdir():
+        dest = nyt_target / item.name
+        if dest.exists():
+            continue
+        shutil.move(str(item), dest)
+    shutil.rmtree(nyt_target / "data", ignore_errors=True)
+
 ensure_snapshot(
     repo_id="bert-base-cased",
     repo_type="model",

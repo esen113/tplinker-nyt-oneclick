@@ -28,7 +28,7 @@ from tplinker import (HandshakingTaggingScheme,
                       MetricsCalculator)
 import wandb
 import config
-from glove import Glove
+from common.glove_compat import ensure_glove
 import numpy as np
 
 
@@ -230,20 +230,22 @@ indexed_valid_data = data_maker.get_indexed_data(valid_data, max_seq_len)
 # In[ ]:
 
 
-train_dataloader = DataLoader(MyDataset(indexed_train_data), 
-                                  batch_size = hyper_parameters["batch_size"], 
-                                  shuffle = True, 
-                                  num_workers = 6,
-                                  drop_last = False,
-                                  collate_fn = data_maker.generate_batch,
-                                 )
-valid_dataloader = DataLoader(MyDataset(indexed_valid_data), 
-                          batch_size = hyper_parameters["batch_size"], 
-                          shuffle = True, 
-                          num_workers = 6,
-                          drop_last = False,
-                          collate_fn = data_maker.generate_batch,
-                         )
+train_dataloader = DataLoader(
+    MyDataset(indexed_train_data),
+    batch_size=hyper_parameters["batch_size"],
+    shuffle=True,
+    num_workers=0,
+    drop_last=False,
+    collate_fn=data_maker.generate_batch,
+)
+valid_dataloader = DataLoader(
+    MyDataset(indexed_valid_data),
+    batch_size=hyper_parameters["batch_size"],
+    shuffle=True,
+    num_workers=0,
+    drop_last=False,
+    collate_fn=data_maker.generate_batch,
+)
 
 
 # In[ ]:
@@ -288,6 +290,7 @@ if config["encoder"] == "BERT":
                                 )
     
 elif config["encoder"] in {"BiLSTM", }:
+    Glove = ensure_glove()
     glove = Glove()
     glove = glove.load(config["pretrained_word_embedding_path"])
     
@@ -608,4 +611,3 @@ if not config["fr_scratch"]:
     print("------------model state {} loaded ----------------".format(model_state_path.split("/")[-1]))
 
 train_n_valid(train_dataloader, valid_dataloader, optimizer, scheduler, hyper_parameters["epochs"])
-
